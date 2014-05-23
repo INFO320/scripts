@@ -9,7 +9,15 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Get the old password
+echo "Please Enter Current Password"
+read oldPass
+echo ""
+echo "Please Confirm Current Password"
+read oldConf
+
 # Lets get the password
+echo ""
 echo "Please Enter New Password"
 read pass
 
@@ -20,7 +28,7 @@ read conf
 
 # Ensures that both arguments are equal
 # Ensures (by virtue of above check) that the password is not a blank string.
-if [ "$pass" != "$conf" ]; then
+if [ "$pass" != "$conf" ] || [ "$oldPass" != "$oldConf" ]; then
    echo "Entered passwords are not equal"
    exit 1
 fi
@@ -34,7 +42,7 @@ read -p "This script will log you out and  reboot the server. Save all work. Pre
 echo "student:$pass" | chpasswd
 
 # Change the password in tomcat to match
-sed -i -e s/Info320/$pass/ /etc/tomcat/tomcat-users.xml
+sed -i -e s/$oldPass/$pass/ /etc/tomcat7/tomcat-users.xml
 
 # Create script which starts the singular rdp session at boot. 
 # XRDP is limited to only a single session  by /etc/xrdp/sesman.ini
