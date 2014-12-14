@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo -u nodejs nohup node node-proxy/proxy.js > proxy.log &
+sudo -u nodejs forever start node-proxy/proxy.js
